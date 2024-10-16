@@ -48,7 +48,7 @@ namespace EmployeeManagement.Controllers
         // GET: SystemCodeDetails/Create
         public IActionResult Create()
         {
-            ViewData["SystemCodeId"] = new SelectList(_context.SystemCodes, "Id", "Id");
+            ViewData["SystemCodeId"] = new SelectList(_context.SystemCodes, "Id", "Description");
             return View();
         }
 
@@ -57,15 +57,17 @@ namespace EmployeeManagement.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,SystemCodeId,Code,Description,OrderNo,CreatedById,CreatedOn,ModifiedById,ModifiedOn")] SystemCodeDetail systemCodeDetail)
+        public async Task<IActionResult> Create(SystemCodeDetail systemCodeDetail)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(systemCodeDetail);
+            //if (ModelState.IsValid)
+            //{
+            systemCodeDetail.CreatedOn = DateTime.Now;
+            systemCodeDetail.CreatedById = "BroCode";
+            _context.Add(systemCodeDetail);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["SystemCodeId"] = new SelectList(_context.SystemCodes, "Id", "Id", systemCodeDetail.SystemCodeId);
+            //}
+            ViewData["SystemCodeId"] = new SelectList(_context.SystemCodes, "Id", "Description", systemCodeDetail.SystemCodeId);
             return View(systemCodeDetail);
         }
 
@@ -82,7 +84,7 @@ namespace EmployeeManagement.Controllers
             {
                 return NotFound();
             }
-            ViewData["SystemCodeId"] = new SelectList(_context.SystemCodes, "Id", "Id", systemCodeDetail.SystemCodeId);
+            ViewData["SystemCodeId"] = new SelectList(_context.SystemCodes, "Id", "Description", systemCodeDetail.SystemCodeId);
             return View(systemCodeDetail);
         }
 
@@ -91,18 +93,20 @@ namespace EmployeeManagement.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,SystemCodeId,Code,Description,OrderNo,CreatedById,CreatedOn,ModifiedById,ModifiedOn")] SystemCodeDetail systemCodeDetail)
+        public async Task<IActionResult> Edit(int id, SystemCodeDetail systemCodeDetail)
         {
             if (id != systemCodeDetail.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 try
                 {
-                    _context.Update(systemCodeDetail);
+                systemCodeDetail.ModifiedOn = DateTime.Now;
+                systemCodeDetail.ModifiedById = "BroCode";
+                _context.Update(systemCodeDetail);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -117,8 +121,8 @@ namespace EmployeeManagement.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["SystemCodeId"] = new SelectList(_context.SystemCodes, "Id", "Id", systemCodeDetail.SystemCodeId);
+            //}
+            ViewData["SystemCodeId"] = new SelectList(_context.SystemCodes, "Id", "Description", systemCodeDetail.SystemCodeId);
             return View(systemCodeDetail);
         }
 
